@@ -1,0 +1,107 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ConsoleApp1
+{
+    class Employee
+    {
+        string fullName;
+        int empID;
+        float currPay;
+        public int EmpID
+        {
+            get { return empID; }
+            set { empID = value; }
+        }
+        public string FullName
+        {
+            get { return fullName; }
+            set { fullName = value; }
+        }
+        public float CurrPay
+        {
+            get { return currPay; }
+            set { currPay = value; }
+        }
+        public virtual void GiveBonus(float amount)
+        {
+            currPay += amount;
+        }
+        public virtual void DisplayStatus()
+        {
+            Console.WriteLine("Код:  {0}", empID);
+            Console.WriteLine("ФИО:  {0}", fullName);
+            Console.WriteLine("Зарплата: {0}", currPay);
+            string s = Console.ReadLine();
+        }
+    }
+    class SalePerson: Employee
+    {
+        private uint numberOfSales;
+        public uint NumberOfSales
+        {
+            get { return numberOfSales; }
+            set { numberOfSales = value; }
+        }
+        public override void GiveBonus(float amount)
+        {
+            uint salesBonus = 0;
+            if (numberOfSales >= 0 && numberOfSales <= 100)
+                salesBonus = 10;
+            else if (numberOfSales >= 101 && numberOfSales <= 200)
+                salesBonus = 15;
+            else
+                salesBonus = 20;
+            base.GiveBonus(amount * salesBonus);
+        }
+        public override void DisplayStatus()
+        {
+            base.DisplayStatus();
+            Console.WriteLine("Объём продаж: {0}", numberOfSales);
+            string s = Console.ReadLine();
+        }
+    }
+    class Manager : Employee
+    {
+        private uint numberOfOptions;
+        public uint NumberOfOptions
+        {
+            get { return numberOfOptions; }
+            set { numberOfOptions = value; }
+        }
+        public override void GiveBonus(float amount)
+        {
+            base.GiveBonus(amount);
+            numberOfOptions += Convert.ToUInt32(amount * 10);
+        }
+        public override void DisplayStatus()
+        {
+            base.DisplayStatus();
+            Console.WriteLine("Количество опционов: {0}", numberOfOptions);
+            string s = Console.ReadLine();
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Manager man = new Manager();
+            man.EmpID = 1;
+            man.FullName = "Иванов Иван Иванович";
+            man.CurrPay = 10000;
+            man.NumberOfOptions = 500;
+            man.GiveBonus(5000);
+            man.DisplayStatus();
+
+            SalePerson sal = new SalePerson();
+            sal.EmpID = 2;
+            sal.FullName = "Петров Пётр Петрович";
+            sal.CurrPay = 8000;
+            sal.NumberOfSales = 40;
+            sal.GiveBonus(3000);
+            sal.DisplayStatus();
+        }
+    }
+}

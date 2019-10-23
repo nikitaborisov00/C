@@ -1,0 +1,77 @@
+using System;
+public interface ICipher
+{
+    string encode(string str);
+    string decode(string str);
+}
+
+class ACipher : ICipher
+{
+    public string encode(string str)
+    {
+        string ciphertext = "";
+        for (int i = 0; i < str.Length; i++)
+            ciphertext = ciphertext + (char)(str[i] + 1);
+        return ciphertext;
+    }
+    public string decode(string str)
+    {
+        string plaintext = "";
+        for (int i = 0; i < str.Length; i++)
+            plaintext = plaintext + (char)(str[i] - 1);
+        return plaintext;
+    }
+}
+
+class BCipher : ICipher
+{
+    ushort key;
+    public BCipher(ushort k)
+    {
+        key = k;
+    }
+    public string encode(string str)
+    {
+        string ciphertext = "";
+        for (int i = 0; i < str.Length; i++)
+            ciphertext = ciphertext + (char)(str[i] ^ key);
+        return ciphertext;
+    }
+
+    public string decode(string str)
+    {
+        string plaintext = "";
+        for (int i = 0; i < str.Length; i++)
+            plaintext = plaintext + (char)(str[i] ^ key);
+        return plaintext;
+    }
+}
+
+class Program
+{
+    public static void Main()
+    {
+        ICipher ciphRef;
+        BCipher bit = new BCipher(27);
+        ACipher sc = new ACipher();
+        string plain;
+        string coded;
+        ciphRef = sc;
+        Console.WriteLine("Использование простого шифра");
+        plain = "Nikita";
+        coded = ciphRef.encode(plain);
+        Console.WriteLine("Зашифрованный текст: " + coded);
+
+        plain = ciphRef.decode(coded);
+        Console.WriteLine("Открытый текст: " + plain);
+        ciphRef = bit;
+
+        Console.WriteLine("\nИспользование поразрядного шифрования");
+        plain = "Borisov";
+        coded = ciphRef.encode(plain);
+        Console.WriteLine("Зашифрованный текст: " + coded);
+
+        plain = ciphRef.decode(coded);
+        Console.WriteLine("Открытый текст: " + plain);
+    }
+}

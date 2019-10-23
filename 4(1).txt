@@ -1,0 +1,105 @@
+using System;
+using System.Collections;
+using System.Text;
+interface IEmloyee
+{
+    int Id { get; set; }
+    void Enter();
+    void Display();
+}
+internal class Employee : IEmloyee, IComparable
+{      
+    #region Поля и свойства   
+    private int id;   
+    public int Id   
+    {       
+        get { return id; }    
+        set { id = value; }  
+    }       
+    private string fio;    
+    public string Fio   
+    {     
+        get { return fio; }      
+        set { fio = value; } 
+    }     
+    private int salary;  
+    public int Salary
+    {
+        get { return salary; }
+        set { salary = value; }
+    }
+    #endregion
+#region Методы   
+    public void Enter()  
+    {        
+        Console.WriteLine("Введите номер: "); 
+        Id = Convert.ToInt32(Console.ReadLine());     
+        Console.WriteLine("Введите ФИО: ");     
+        Fio = Console.ReadLine();   
+        Console.WriteLine("Введите зарплату: ");  
+        Salary = Convert.ToInt32(Console.ReadLine());  
+    } 
+   
+    public void Display()   
+    {        
+        Console.WriteLine("Код: {0} ФИО: {1} Зарплата: {2}",   
+            Id,     
+            Fio,    
+            Salary);    
+    } 
+  
+    public void Getbonus()      
+    {      
+        Salary = Salary + 1000;  
+    }
+    public int CompareTo(object emp) 
+    { 
+        Employee employee = (Employee)emp; 
+        if (Salary > employee.Salary)
+            return 1;
+        else if (Salary < employee.Salary) 
+            return -1;
+        else return 0;
+    }
+}
+#endregion
+
+class Program
+{
+    private static void Main(string[] args)
+    {
+        IEmloyee emp_e = new Employee();
+        emp_e.Enter();
+        emp_e.Display();
+        Employee emp = new Employee();
+        emp.Enter();
+        emp.Getbonus();
+        emp.Display();
+        Employee emp_2 = new Employee()
+        {
+            Id = 3,
+            Fio = "Cмирнов A. A.",
+            Salary = 15000
+        };
+        //Employee emp_3 = new Employee()
+        //{
+        //    Id = 4,
+        //    Fio = "Иванов Н. A.",
+        //    Salary = 25000
+        //};
+        //Employee emp_4 = new Employee()
+        //{
+        //    Id = 5,
+        //    Fio = "Петров Г. В.",
+        //    Salary = 10000
+        //};
+        Employee[] emploees = new Employee[]
+        {
+        emp,
+        emp_2
+        };
+        Console.ReadLine();
+        Array.Sort(emploees);
+    }
+}
+

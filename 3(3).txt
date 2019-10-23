@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ConsoleApp1
+{
+    class Car
+    {
+        int empID;
+        string fullName;
+        string number;
+        public int EmpID
+        {
+            get { return empID; }
+            set { empID = value; }
+        }
+        public string FullName
+        {
+            get { return fullName; }
+            set { fullName = value; }
+        }
+        public string Number
+        {
+            get { return number; }
+            set { number = value; }
+        }
+        public virtual void DisplayStatus()
+        {
+            Console.WriteLine("Код:  {0}", empID);
+            Console.WriteLine("Марка авто:  {0}", fullName);
+            Console.WriteLine("Гос.номер: {0}", number);
+            string s = Console.ReadLine();
+        }
+    }
+    class Passenger: Car
+    {
+        private string type;
+        private string maxSpeed;
+        public string Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+        public string MaxSpeed
+        {
+            get { return maxSpeed; }
+            set { maxSpeed = value; }
+        }
+        public override void DisplayStatus()
+        {
+            base.DisplayStatus();
+            Console.WriteLine("Тип: {0}", Type);
+            Console.WriteLine("Макс. скорость: {0}", MaxSpeed);
+            string s = Console.ReadLine();
+        }
+    }
+    class Truck : Car
+    {
+        private string carrying;
+        public string Carrying
+        {
+            get { return carrying; }
+            set { carrying = value; }
+        }
+        public override void DisplayStatus()
+        {
+            base.DisplayStatus();
+            Console.WriteLine("Грузоподъёмность: {0}", Carrying);
+            string s = Console.ReadLine();
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Truck a = new Truck();
+            a.EmpID = 1;
+            a.FullName = "Mercedes-Benz Sprinter";
+            a.Number = "A023AA23";
+            a.Carrying = "3 тонны";
+            a.DisplayStatus();
+
+            Passenger a1 = new Passenger();
+            a1.EmpID = 2;
+            a1.FullName = "BMW M5 Competition";
+            a1.Number = "E023KX23";
+            a1.Type = "Седан";
+            a1.MaxSpeed = "250 км/ч";
+            a1.DisplayStatus();
+        }
+    }
+}

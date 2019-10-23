@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ConsoleApp1
+{
+#region fields
+    class Customer
+    {
+        private int nCustomerId;
+        private string pFirstName;
+        private string pMiddename;
+        private string pLastName;
+        private string pEmailAddress;
+        public int NCustomerId
+        {
+            get { return nCustomerId; }
+            set { nCustomerId = value; }
+        }
+        public string PFirstName
+        {
+            get { return pFirstName; }
+            set { pFirstName = value; }
+        }
+
+        public string PMiddleName
+        {
+            get { return pMiddename; }
+            set { pMiddename = value; }
+        }
+        public string PLastName
+        {
+            get { return pLastName; }
+            set { pLastName = value; }
+        }
+        public string PEmailAddress
+        {
+            get { return pEmailAddress; }
+            set { pEmailAddress = value; }
+        }
+#endregion
+#region methodos
+        public override string ToString() 
+        {
+            return String.Format("Фамилия: {0} Имя: {1}", PLastName, PFirstName);
+        }
+
+        public override bool Equals(object obj) 
+        {
+            Customer pCust = (Customer)obj; return (pCust.NCustomerId == NCustomerId);
+        }
+
+        public override int GetHashCode() 
+        {
+            return NCustomerId;
+        }
+    }
+#endregion
+#region properties
+    class TestCustomer
+    {
+        public static void LoadTestCustomer()
+        {
+            Customer pCustomer1 = new Customer()
+            {
+                NCustomerId = 1,
+                PLastName = "Петров",
+                PFirstName = "Семён",
+                PMiddleName = "Сергеевич",
+                PEmailAddress = "pss@rsue.ru"
+            };
+            Customer pCustomer2 = new Customer()
+            {
+                NCustomerId = 2,
+                PLastName = "Иванов",
+                PFirstName = "Семён",
+                PMiddleName = "Сергеевич",
+                PEmailAddress = "spp@rsue.ru"
+            };
+
+            ShowCustomerObject("pCustomer1", pCustomer1);
+            ShowCustomerObject("pCustomer2", pCustomer2);
+            CompareCustomerObject(pCustomer1, pCustomer2);
+        }
+        private static void ShowCustomerObject(string pLabel, Customer pCust)
+        {
+            Console.WriteLine("----{0}----", pLabel);
+            Console.WriteLine("ToString() = {0}", pCust.ToString());
+            Console.WriteLine("GetHashCode = {0}", pCust.GetHashCode());
+            Console.WriteLine("GetType() = {0}", pCust.GetType());
+            Console.WriteLine("--------------------------");
+        }
+        private static void CompareCustomerObject(Customer pCust1, Customer pCust2)
+        {
+            Console.WriteLine("Equals() = {0}", pCust1.Equals(pCust2));
+        }
+    }
+#endregion
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            TestCustomer.LoadTestCustomer();
+            Console.ReadLine();
+        }
+    }
+}

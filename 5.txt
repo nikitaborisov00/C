@@ -1,0 +1,76 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+public class ElectricPumpDriver
+{
+    public void StartElectricPump()
+    {
+        //…       
+    }
+}
+public class PneumaticPumpDriver
+{
+    public void SwitchOn()
+    {
+        //…       
+    }
+}
+public class CoreTempMonitor
+{
+    private ArrayList pumps = new ArrayList();
+    public void Add(object pump)
+    {
+        pumps.Add(pump);
+    }
+    public void SwitchOnAllPumps()
+    {
+        foreach (object pump in pumps)
+            if (pump is ElectricPumpDriver)
+                (ElectricPumpDriver)pump.StartElectricPump();
+        if (pump is PneumaticPumpDriver)
+            (PneumaticPumpDriver)pump.SwitchOn();
+    }
+    //…  
+}
+
+//class Program
+//{
+//    static void Main(string[] args)
+//    {
+//        CoreTempMonitor ctm = new CoreTempMonitor();
+//        ElectricPumpDriver ed1 = new ElectricPumpDriver();
+//        ctm.Add(ed1);
+//        PneumaticPumpDriver pd1 = new PneumaticPumpDriver();
+//        ctm.Add(pd1);
+//        ctm.SwitchOnAllPumps();
+//    }
+//}
+
+public delegate void StartPumpCallback();
+public class CoreTempMonitor2
+{
+    private ArrayList callbacks = new ArrayList();
+    public void Add(StartPumpCallback callback)
+    {
+        callbacks.Add(callback);
+    }
+    public void SwitchOnAllPumps()
+    {
+        foreach (StartPumpCallback callback in callbacks)
+            callback();
+    }
+}
+class Program 
+{
+    static void Main(string[] args)
+    { 
+        CoreTempMonitor2 ctm = new CoreTempMonitor2();
+        ElectricPumpDriver ed1 = new ElectricPumpDriver(); 
+        ctm.Add(new StartPumpCallback(ed1.StartElectricPump));
+        PneumaticPumpDriver pd1 = new PneumaticPumpDriver(); 
+        ctm.Add(new StartPumpCallback(pd1.SwitchOn));
+        ctm.SwitchOnAllPumps();
+    } 
+}
