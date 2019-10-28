@@ -3,74 +3,81 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class ElectricPumpDriver
-{
-    public void StartElectricPump()
-    {
-        //…       
-    }
-}
-public class PneumaticPumpDriver
-{
-    public void SwitchOn()
-    {
-        //…       
-    }
-}
-public class CoreTempMonitor
-{
-    private ArrayList pumps = new ArrayList();
-    public void Add(object pump)
-    {
-        pumps.Add(pump);
-    }
-    public void SwitchOnAllPumps()
-    {
-        foreach (object pump in pumps)
-            if (pump is ElectricPumpDriver)
-                (ElectricPumpDriver)pump.StartElectricPump();
-        if (pump is PneumaticPumpDriver)
-            (PneumaticPumpDriver)pump.SwitchOn();
-    }
-    //…  
-}
+public delegate void EmployeeInfo(); 
+public delegate double RaiseSalary(double bonus);
 
-//class Program
-//{
-//    static void Main(string[] args)
-//    {
-//        CoreTempMonitor ctm = new CoreTempMonitor();
-//        ElectricPumpDriver ed1 = new ElectricPumpDriver();
-//        ctm.Add(ed1);
-//        PneumaticPumpDriver pd1 = new PneumaticPumpDriver();
-//        ctm.Add(pd1);
-//        ctm.SwitchOnAllPumps();
-//    }
-//}
+namespace ConApp_delegate_emp
+{
+    class Employee
+    {
+        int id;
+        string name;
+        double salary;
+        DateTime dateOfEmployment;
+        public Employee()
+        { }
 
-public delegate void StartPumpCallback();
-public class CoreTempMonitor2
-{
-    private ArrayList callbacks = new ArrayList();
-    public void Add(StartPumpCallback callback)
-    {
-        callbacks.Add(callback);
+        public Employee(int id, string name, double salary, DateTime dateOfEmployment)
+        {
+            this.id = id;
+            this.name = name;
+            this.salary = salary;
+            this.dateOfEmployment = dateOfEmployment;
+        }
+
+        #region Методы класса     
+        public void Display()
+        {
+            Console.WriteLine("код - {1, 2}  {0}" +
+            " дата приема - {2,2}.{3,2}.{4,4}" +
+            "  зарплата {5,6:C}",
+            name.PadRight(18), id,
+            dateOfEmployment.Day,
+            dateOfEmployment.Month,
+            dateOfEmployment.Year, salary);
+        }
+
+        public double GiveBonus(double bonus)
+        {
+            return salary *= (1 + bonus);
+        }
+
+        #endregion
     }
-    public void SwitchOnAllPumps()
+    class Program
     {
-        foreach (StartPumpCallback callback in callbacks)
-            callback();
+        static void Main(string[] args)
+        {
+            Employee emp1 = new Employee(1, "Петров Петр", 150000, new DateTime(2002, 12, 12));
+            Employee emp2 = new Employee(2, "Шевцов Павел", 90000, new DateTime(2006, 06, 06));
+            Employee emp3 = new Employee(3, "Иванов Иван", 50000, new DateTime(2001, 10, 12));
+            Employee emp4 = new Employee(4, "Квасов Александр", 80000, new DateTime(2000, 08, 17));
+            Employee emp5 = new Employee(5, "Калинин Алексей", 70000, new DateTime(1999, 08, 15));
+            Employee emp6 = new Employee(6, "Бочаров Константин", 100000, new DateTime(2001, 10, 18));
+
+            // Массив делегатов для вывода данных по сотрудникам        
+            EmployeeInfo[] employees = new EmployeeInfo[]
+            {
+                emp1.Display, emp2.Display, emp3.Display,
+                emp4.Display, emp5.Display, emp6.Display
+            };
+
+            RaiseSalary raiseBonus1 = new RaiseSalary(emp2.GiveBonus);
+            RaiseSalary raiseBonus2 = new RaiseSalary(emp4.GiveBonus);
+            RaiseSalary raiseBonus3 = new RaiseSalary(emp6.GiveBonus);
+
+            Console.ReadLine();
+            Console.WriteLine("Начисление премии: ");
+            raiseBonus1(0.1);
+            raiseBonus2(0.2);
+            raiseBonus3(0.1);
+
+            for (int i = 0; i < employees.Length; i++)
+            { 
+                employees[i](); 
+            }
+
+            Console.ReadLine();
+        }
     }
-}
-class Program 
-{
-    static void Main(string[] args)
-    { 
-        CoreTempMonitor2 ctm = new CoreTempMonitor2();
-        ElectricPumpDriver ed1 = new ElectricPumpDriver(); 
-        ctm.Add(new StartPumpCallback(ed1.StartElectricPump));
-        PneumaticPumpDriver pd1 = new PneumaticPumpDriver(); 
-        ctm.Add(new StartPumpCallback(pd1.SwitchOn));
-        ctm.SwitchOnAllPumps();
-    } 
 }
