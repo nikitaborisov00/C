@@ -1,0 +1,125 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+class NBook
+{
+
+    private string model;
+    private string cpu_model;
+    private int cpu_clock;
+    private int ram_size;
+
+    public string Model
+    {
+        get { return model; }
+        set { model = value; }
+    }
+
+    public string CpuModel
+    {
+        get { return cpu_model; }
+        set { cpu_model = value; }
+    }
+
+    public int CpuClock
+    {
+        get { return cpu_clock; }
+        set { cpu_clock = value; }
+    }
+
+    public int RamSize
+    {
+        get { return ram_size; }
+        set { ram_size = value; }
+    }
+
+    public NBook(string mname, string Cpu, int clock, int ram)
+    {
+        model = mname;
+        cpu_model = Cpu;
+        cpu_clock = clock;
+        ram_size = ram;
+    }
+}
+class NBooks : IEnumerable
+{
+    private ArrayList nbList;
+    public NBooks()
+    {
+        nbList = new ArrayList();
+    }
+
+    public void AddNBook(NBook nb)
+    { nbList.Add(nb); }
+
+    public void RemoveNBook(int nbToRemove) { nbList.RemoveAt(nbToRemove); }
+
+    public int NBookCount
+    {
+        get { return nbList.Count; }
+    }
+
+    public void ClearAllNBooks()
+    {
+        nbList.Clear();
+    }
+
+    public bool NBookIsPresent(NBook c)
+    {
+        return nbList.Contains(c);
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return nbList.GetEnumerator();
+    }
+}
+}
+
+static void Main(string[] args)
+{
+    NBooks nbLot = new NBooks();
+
+    nbLot.AddNBook(new NBook("ASUS A7Sn", "Intel Core 2 Duo  T8300", 2400, 2048));
+    nbLot.AddNBook(new NBook("Acer Aspire 5530G-803G25Mi", "AMD Turion X2 Ultra ZM80", 2100, 3072));
+    nbLot.AddNBook(new NBook("Fujitsu Amilo Si 2636", "Intel Core 2 Duo T8300", 2400, 2048));
+    nbLot.AddNBook(new NBook("HP Pavilion tx2650er", "AMD Turion X2 Ultra ZM82", 2200, 4096));
+
+    Console.WriteLine("У Вас {0} позиции в списке: \n", nbLot.NBookCount);
+
+    foreach (NBook nb in nbLot)
+    {
+        Console.WriteLine("Model: {0}", nb.Model);
+        Console.Write("CPU: {0}", nb.CpuModel);
+        Console.WriteLine(" {0} GHz", nb.CpuClock);
+        Console.WriteLine("RAM: {0} GB\n", nb.RamSize);
+    }
+    Console.ReadLine();
+
+    foreach (NBook nb in nbLot)
+    {
+        if (nb.CpuClock == 2400)
+        {
+            Console.WriteLine("Model: {0}", nb.Model);
+            Console.Write("CPU: {0}", nb.CpuModel);
+            Console.WriteLine(" {0} GHz", nb.CpuClock);
+            Console.WriteLine("RAM: {0} GB\n", nb.RamSize);
+        }
+    }
+    Console.ReadLine();
+
+    nbLot.RemoveNBook(3);
+    Console.WriteLine("У Вас {0} позиции в списке.\n", nbLot.NBookCount);
+
+    NBook temp = new NBook("ASUS M51Ta", "AMD Turion™ X2 Ultra ZM84", 2300, 4096);
+    nbLot.AddNBook(temp);
+
+    if (nbLot.NBookIsPresent(temp))
+        Console.WriteLine(temp.Model + " уже в списке.");
+
+    nbLot.ClearAllNBooks();
+    Console.WriteLine("У Вас {0} позиции в списке.\n", nbLot.NBookCount);
+    Console.ReadLine();
+}

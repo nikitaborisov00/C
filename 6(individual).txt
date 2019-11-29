@@ -1,0 +1,116 @@
+using System;
+using System.Collections;
+using System.Linq;
+using System.Text;
+
+class Buyers
+{
+
+    private string FIO;
+    private string address;
+    private int sale;
+
+    public string FIO
+    {
+        get { return FIO; }
+        set { FIO = value; }
+    }
+
+    public string address
+    {
+        get { return address; }
+        set { address = value; }
+    }
+
+    public int sale
+    {
+        get { return sale; }
+        set { sale = value; }
+    }
+
+    public Buyers(string name, string url, int discount)
+    {
+        FIO = name;
+        address = url;
+        sale = discount;
+    }
+}
+class Buyers : IEnumerable
+{
+    private ArrayList BList;
+    public Buyers()
+    {
+        BList = new ArrayList();
+    }
+
+    public void AddBuyers(Buyers B)
+    { BList.Add(B); }
+
+    public void RemoveBuyers(int BToRemove) { BList.RemoveAt(BToRemove); }
+
+    public int BuyersCount
+    {
+        get { return BList.Count; }
+    }
+
+    public void ClearAllBuyers()
+    {
+        BList.Clear();
+    }
+
+    public bool BuyersIsPresent(Buyers c)
+    {
+        return BList.Contains(c);
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return BList.GetEnumerator();
+    }
+}
+
+
+static void Main(string[] args)
+{
+    Buyers BLot = new Buyers();
+
+    BLot.AddBuyers(new Buyers("Иванов Иван Иванович", "Большая садовая 9", 10));
+    BLot.AddBuyers(new Buyers("Петров Пётр Петрович", "Мечникова 20", 5));
+    BLot.AddBuyers(new Buyers("Максимов Максим Максимович", "Ленина 15", 3));
+    BLot.AddBuyers(new Buyers("Даниллов Данилл Данилович", "Куникова 20", 5));
+
+    Console.WriteLine("У Вас {0} позиции в списке: \n", BLot.BuyersCount);
+
+    //Вывод покупателей
+    foreach (Buyers B in BLot)
+    {
+        Console.WriteLine("FCS: {0}", B.FIO);
+        Console.Write("Address: {0}", B.address);
+        Console.WriteLine(" {0} %", B.sale);
+    }
+    Console.ReadLine();
+
+    //Поиск покупателей имеющих 5 % - ную скидку
+    foreach (Buyers B in BLot)
+    {
+        if (B.sale == 5)
+        {
+            Console.WriteLine("FCS: {0}", B.FIO);
+            Console.Write("Address: {0}", B.address);
+            Console.WriteLine(" {0} %", B.sale);
+        }
+    }
+    Console.ReadLine();
+
+    //Добавление нового покупателя
+    Buyers temp = new Buyers("Борисов Никита Александрович", "Большая садова 69", 10);
+    BLot.AddBuyers(temp);
+
+    //Удаление покупателя
+    BLot.RemoveBuyers(3);
+    Console.WriteLine("У Вас {0} позиции в списке.\n", BLot.BuyersCount);
+
+    if (BLot.BuyersIsPresent(temp))
+        Console.WriteLine(temp.FIO + " уже в списке.");
+
+}

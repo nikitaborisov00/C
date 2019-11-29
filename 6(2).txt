@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+class Auto
+{
+    public string Marka; public string Number; public int Age;
+
+    public Auto() { }
+    public override string ToString()
+    {
+        return String.Format("Марка - {0}, возраст - {1} лет, номер - {2}", this.Marka, this.Age, this.Number);
+    }
+}
+
+static void Main (string[] args)
+{
+    Dictionary<string, Auto> dic; 
+    dic = new Dictionary<string, Auto>();
+
+    Auto car = new Auto()
+    { 
+        Marka = "BMW",
+        Number = "A005AA23",
+        Age = 1 
+    };
+    dic.Add(car.Number, car); 
+    car = new Auto()
+    { Marka = "Porshe",
+        Number = "E911KX61",
+        Age = 10 
+    };
+    dic.Add(car.Number, car);
+    car = new Auto()
+    {
+        Marka = "Audi",
+        Number = "C007KP77",
+        Age = 3
+    };
+    dic.Add(car.Number, car);
+
+    foreach (Auto a in dic.Values)     
+        Console.WriteLine(a.ToString());   
+    Console.ReadLine(); 
+
+    Console.WriteLine(dic["E911KX61"].ToString());     
+    Console.ReadLine(); 
+
+    if (dic.ContainsKey("E911KX61"))            
+        Console.WriteLine("Автомобиль с номером E911KX61" + " ЕСТЬ в словаре"); 
+
+    if (!dic.ContainsKey("C999CC99")) 
+        Console.WriteLine("Автомобиля с номером C999CC99" + " НЕТ в словаре"); 
+    Console.ReadLine();
+
+    Auto aa; 
+
+    if (dic.TryGetValue("в345тс48", out aa))
+        Console.WriteLine("Автомобиль с номером в345тс48" + " ЕСТЬ в словаре \n" + "Информация об автомобиле: " + aa.ToString()); 
+    Console.ReadLine();
+
+    foreach (string s in dic.Keys) Console.WriteLine(s);
+
+    foreach (KeyValuePair<string, Auto> kvp in dic)              
+        Console.WriteLine("Ключ - " + kvp.Key + ", значение - " + kvp.Value);            
+    Console.ReadLine();      
+}
