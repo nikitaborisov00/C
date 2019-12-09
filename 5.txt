@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-public delegate void EmployeeInfo(); 
+
+public delegate void EmployeeInfo();
 public delegate double RaiseSalary(double bonus);
-
-namespace ConApp_delegate_emp
+delegate bool EmploySort(object empL, object empR);
+namespace ConsoleApp1
 {
     class Employee
     {
@@ -14,70 +16,75 @@ namespace ConApp_delegate_emp
         string name;
         double salary;
         DateTime dateOfEmployment;
-        public Employee()
-        { }
-
         public Employee(int id, string name, double salary, DateTime dateOfEmployment)
         {
             this.id = id;
             this.name = name;
             this.salary = salary;
             this.dateOfEmployment = dateOfEmployment;
-        }
 
-        #region Методы класса     
-        public void Display()
+        }
+        public override string ToString()
         {
-            Console.WriteLine("код - {1, 2}  {0}" +
-            " дата приема - {2,2}.{3,2}.{4,4}" +
-            "  зарплата {5,6:C}",
-            name.PadRight(18), id,
-            dateOfEmployment.Day,
-            dateOfEmployment.Month,
-            dateOfEmployment.Year, salary);
+            return string.Format("Код - {1, 2}  {0}" +
+                                 "дата приема - {2,2}.{3,2}.{4,4}" + "  зарплата {5,6}р",
+                name.PadRight(18), id, dateOfEmployment.Day,
+                dateOfEmployment.Month, dateOfEmployment.Year, salary);
         }
 
         public double GiveBonus(double bonus)
         {
             return salary *= (1 + bonus);
         }
+        public static bool CreaterSalary(object emp1, object emp2)
+        {
+            Employee empL = (Employee)emp1;
+            Employee empR = (Employee)emp2;
+            return (empR.salary > empL.salary) ? true : false;
+        }
 
-        #endregion
+
     }
+
+    class Sorter
+    {
+        static public void Sort(object[] sortArray, EmploySort gtMethod)
+        {
+            for (int i = 0; i < sortArray.Length; i++)
+                for (int j = i + 1; j < sortArray.Length; j++)
+                    if (gtMethod(sortArray[j], sortArray[i]))
+                    {
+                        object temp = sortArray[i];
+                        sortArray[i] = sortArray[j];
+                        sortArray[j] = temp;
+                    }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            Employee emp1 = new Employee(1, "Петров Петр", 150000, new DateTime(2002, 12, 12));
-            Employee emp2 = new Employee(2, "Шевцов Павел", 90000, new DateTime(2006, 06, 06));
-            Employee emp3 = new Employee(3, "Иванов Иван", 50000, new DateTime(2001, 10, 12));
-            Employee emp4 = new Employee(4, "Квасов Александр", 80000, new DateTime(2000, 08, 17));
-            Employee emp5 = new Employee(5, "Калинин Алексей", 70000, new DateTime(1999, 08, 15));
-            Employee emp6 = new Employee(6, "Бочаров Константин", 100000, new DateTime(2001, 10, 18));
-
-            // Массив делегатов для вывода данных по сотрудникам        
-            EmployeeInfo[] employees = new EmployeeInfo[]
+            Employee[] employee =
             {
-                emp1.Display, emp2.Display, emp3.Display,
-                emp4.Display, emp5.Display, emp6.Display
+                new Employee(1, "Иванов Иван", 50000, new DateTime(1998, 09, 01)),
+                new Employee(2, "Петров Пётр", 80000, new DateTime(2001, 08, 09)),
+                new Employee(3, "Сидоров Илья", 60000, new DateTime(1997, 07, 08)),
+                new Employee(4, "Алексеев Вадим", 110000, new DateTime(1998, 06, 07)),
+                new Employee(5, "Попов Алексей", 70000, new DateTime(1999, 05, 06)),
+                new Employee(6, "Борисов Никита", 200000, new DateTime(2000, 04, 05))
             };
 
-            RaiseSalary raiseBonus1 = new RaiseSalary(emp2.GiveBonus);
-            RaiseSalary raiseBonus2 = new RaiseSalary(emp4.GiveBonus);
-            RaiseSalary raiseBonus3 = new RaiseSalary(emp6.GiveBonus);
+            Console.WriteLine("Сортировка по заработной плате:");
+            EmploySort zp = new EmploySort(Employee.CreaterSalary);
+            Sorter.Sort(employee, zp);
+            zp = new EmploySort(Employee.CreaterSalary);
+            Sorter.Sort(employee, zp);
+            for (int i = 0; i < employee.Length; i++)
+                Console.WriteLine(employee[i].ToString());
+            Console.ReadKey();
 
-            Console.ReadLine();
-            Console.WriteLine("Начисление премии: ");
-            raiseBonus1(0.1);
-            raiseBonus2(0.2);
-            raiseBonus3(0.1);
-
-            for (int i = 0; i < employees.Length; i++)
-            { 
-                employees[i](); 
-            }
-
-            Console.ReadLine();
         }
     }
 }
+
